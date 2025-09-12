@@ -25,6 +25,25 @@ public class SortUtils
 				(vals, a, b) -> java.util.Arrays.compareUnsigned(vals[a], vals[b]));
 	}
 
+	public static int[] computeOrdering(int len, int[] values, boolean[] isNull,
+			PrimitiveIndexComparator<int[]> primitiveComparator)
+	{
+		if (isNull == null) {
+			return IndirectRadix.sortInts(values);
+		}
+		// fallback to generic path
+		return computeOrdering(len, values, i -> isNull != null && isNull[i], primitiveComparator);
+	}
+
+	public static int[] computeOrdering(int len, long[] values, boolean[] isNull,
+			PrimitiveIndexComparator<long[]> primitiveComparator)
+	{
+		if (isNull == null) {
+			return IndirectRadix64.sortLongs(values);
+		}
+		return computeOrdering(len, values, i -> isNull != null && isNull[i], primitiveComparator);
+	}
+
 	public static <T> int[] computeOrdering(int len, T vals, boolean[] isNull,
 			PrimitiveIndexComparator<T> primitiveComparator)
 	{
@@ -35,6 +54,7 @@ public class SortUtils
 			PrimitiveIndexComparator<T> primitiveComparator)
 	{
 		int[] dest2srcIndex = IntStream.range(0, len).toArray();
+		// fallback to parallel quicksort for arbitrary comparator (keeps existing behavior)
 		IntArrays.parallelQuickSort(dest2srcIndex, (a, b) -> {
 			// if both are null, do a stable sort.
 			if (isNull.test(a) && isNull.test(b))

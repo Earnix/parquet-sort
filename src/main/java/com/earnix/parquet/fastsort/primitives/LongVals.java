@@ -53,7 +53,7 @@ public class LongVals extends BaseNullableValueStore
 		}
 		else
 		{
-			return IndirectRadix64.sortLongs(vals);
+			return SortUtils.reverseIndices(IndirectRadix64.sortLongs(vals));
 		}
 	}
 

@@ -49,10 +49,8 @@ public class DoubleVals extends BaseNullableValueStore
 		}
 		else
 		{
-			// convert doubles to raw long bits and use IndirectRadix64.fast path
-			long[] bits = new long[vals.length];
-			for (int i = 0; i < vals.length; i++) bits[i] = Double.doubleToRawLongBits(vals[i]);
-			return IndirectRadix64.sortDoubleBits(bits);
+			// use convenience overload that accepts double[] directly, then convert dest->src to src->dest
+			return SortUtils.reverseIndices(IndirectRadix64.sortDoubles(vals));
 		}
 	}
 

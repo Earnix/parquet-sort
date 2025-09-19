@@ -1,10 +1,8 @@
 package com.earnix.parquet.fastsort.primitives;
 
 import com.earnix.parquet.columnar.writer.columnchunk.NullableIterators;
-import shaded.parquet.it.unimi.dsi.fastutil.ints.IntArrays;
-import shaded.parquet.it.unimi.dsi.fastutil.longs.LongArrays;
+import com.earnix.parquet.fastsort.radix.IndirectRadix;
 
-import java.util.stream.IntStream;
 
 /**
  * A store for long or double values that might be null
@@ -56,9 +54,7 @@ public class LongVals extends BaseNullableValueStore
 		}
 		else
 		{
-			int[] perm = IntStream.range(0, vals.length).toArray();
-			LongArrays.parallelRadixSortIndirect(perm, vals, true);
-			return SortUtils.reverseIndices(perm);
+			return SortUtils.reverseIndices(IndirectRadix.sortLongs(vals));
 		}
 	}
 

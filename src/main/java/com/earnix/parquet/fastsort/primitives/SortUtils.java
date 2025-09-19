@@ -1,6 +1,7 @@
 package com.earnix.parquet.fastsort.primitives;
 
 import com.earnix.parquet.fastsort.ColumnReader;
+import com.earnix.parquet.fastsort.radix.IndirectRadix;
 import com.google.common.math.IntMath;
 import shaded.parquet.it.unimi.dsi.fastutil.ints.IntArrays;
 
@@ -23,6 +24,25 @@ public class SortUtils
 	{
 		return computeOrdering(binaryVals.length, binaryVals, i -> binaryVals[i] == null,
 				(vals, a, b) -> java.util.Arrays.compareUnsigned(vals[a], vals[b]));
+	}
+
+	public static int[] computeOrdering(int len, int[] values, boolean[] isNull,
+			PrimitiveIndexComparator<int[]> primitiveComparator)
+	{
+		if (isNull == null) {
+			return IndirectRadix.sortInts(values);
+		}
+		// fallback to generic path
+		return computeOrdering(len, values, i -> isNull != null && isNull[i], primitiveComparator);
+	}
+
+	public static int[] computeOrdering(int len, long[] values, boolean[] isNull,
+			PrimitiveIndexComparator<long[]> primitiveComparator)
+	{
+		if (isNull == null) {
+			return IndirectRadix.sortLongs(values);
+		}
+		return computeOrdering(len, values, i -> isNull != null && isNull[i], primitiveComparator);
 	}
 
 	public static <T> int[] computeOrdering(int len, T vals, boolean[] isNull,

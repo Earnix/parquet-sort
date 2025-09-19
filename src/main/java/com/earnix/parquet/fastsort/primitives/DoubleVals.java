@@ -1,9 +1,7 @@
 package com.earnix.parquet.fastsort.primitives;
 
 import com.earnix.parquet.columnar.writer.columnchunk.NullableIterators;
-import shaded.parquet.it.unimi.dsi.fastutil.doubles.DoubleArrays;
-
-import java.util.stream.IntStream;
+import com.earnix.parquet.fastsort.radix.IndirectRadix;
 
 public class DoubleVals extends BaseNullableValueStore
 {
@@ -52,9 +50,7 @@ public class DoubleVals extends BaseNullableValueStore
 		}
 		else
 		{
-			int[] perm = IntStream.range(0, vals.length).toArray();
-			DoubleArrays.parallelRadixSortIndirect(perm, vals, true);
-			return SortUtils.reverseIndices(perm);
+			return SortUtils.reverseIndices(IndirectRadix.sortDoubles(vals));
 		}
 	}
 

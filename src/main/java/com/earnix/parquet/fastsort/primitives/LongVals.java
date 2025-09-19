@@ -1,6 +1,7 @@
 package com.earnix.parquet.fastsort.primitives;
 
 import com.earnix.parquet.columnar.writer.columnchunk.NullableIterators;
+import com.earnix.parquet.fastsort.radix.IndirectRadix;
 
 
 /**
@@ -53,7 +54,7 @@ public class LongVals extends BaseNullableValueStore
 		}
 		else
 		{
-			return SortUtils.reverseIndices(IndirectRadix64.sortLongs(vals));
+			return SortUtils.reverseIndices(IndirectRadix.sortLongs(vals));
 		}
 	}
 

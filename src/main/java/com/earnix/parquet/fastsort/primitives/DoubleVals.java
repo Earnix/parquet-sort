@@ -1,6 +1,7 @@
 package com.earnix.parquet.fastsort.primitives;
 
 import com.earnix.parquet.columnar.writer.columnchunk.NullableIterators;
+import com.earnix.parquet.fastsort.radix.IndirectRadix;
 
 public class DoubleVals extends BaseNullableValueStore
 {
@@ -49,8 +50,7 @@ public class DoubleVals extends BaseNullableValueStore
 		}
 		else
 		{
-			// use convenience overload that accepts double[] directly, then convert dest->src to src->dest
-			return SortUtils.reverseIndices(IndirectRadix64.sortDoubles(vals));
+			return SortUtils.reverseIndices(IndirectRadix.sortDoubles(vals));
 		}
 	}
 

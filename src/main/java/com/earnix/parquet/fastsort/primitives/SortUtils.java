@@ -1,6 +1,7 @@
 package com.earnix.parquet.fastsort.primitives;
 
 import com.earnix.parquet.fastsort.ColumnReader;
+import com.earnix.parquet.fastsort.radix.IndirectRadix;
 import com.google.common.math.IntMath;
 import shaded.parquet.it.unimi.dsi.fastutil.ints.IntArrays;
 
@@ -39,7 +40,7 @@ public class SortUtils
 			PrimitiveIndexComparator<long[]> primitiveComparator)
 	{
 		if (isNull == null) {
-			return IndirectRadix64.sortLongs(values);
+			return IndirectRadix.sortLongs(values);
 		}
 		return computeOrdering(len, values, i -> isNull != null && isNull[i], primitiveComparator);
 	}
@@ -54,7 +55,6 @@ public class SortUtils
 			PrimitiveIndexComparator<T> primitiveComparator)
 	{
 		int[] dest2srcIndex = IntStream.range(0, len).toArray();
-		// fallback to parallel quicksort for arbitrary comparator (keeps existing behavior)
 		IntArrays.parallelQuickSort(dest2srcIndex, (a, b) -> {
 			// if both are null, do a stable sort.
 			if (isNull.test(a) && isNull.test(b))
